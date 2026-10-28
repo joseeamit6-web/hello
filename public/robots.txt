@@ -1,0 +1,6 @@
+User-agent: *
+Allow: /
+Disallow: /api/
+Disallow: /projects
+
+Sitemap: https://pic.amitjoshi.info.np/sitemap.xml

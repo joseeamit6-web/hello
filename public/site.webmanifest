@@ -1,0 +1,17 @@
+{
+  "name": "AI Photo Studio",
+  "short_name": "PhotoStudio",
+  "description": "Professional web-based photo editor with layers, portrait retouching, AI enhancement, background editor, passport photo sizing, and custom print layouts.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#090d16",
+  "theme_color": "#090d16",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

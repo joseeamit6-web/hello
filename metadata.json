@@ -1,0 +1,6 @@
+{
+  "name": "AI Photo Studio",
+  "description": "Professional AI photo studio and advanced manual photo editor with passport maker, print studio, layers, background removal, and retouching.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="en" class="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>AI Photo Studio – Free Online Photo Editor & Passport Photo Maker</title>
+    <meta
+      name="description"
+      content="Enhance photos, retouch portraits, straighten tilted heads, edit backgrounds, create formal portraits, and prepare custom-size passport photos and print-ready sheets online."
+    />
+    <link rel="canonical" href="https://pic.amitjoshi.info.np/" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="apple-touch-icon" href="/favicon.svg" />
+    <link rel="manifest" href="/site.webmanifest" />
+    <meta name="theme-color" content="#090d16" />
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://pic.amitjoshi.info.np/" />
+    <meta property="og:site_name" content="AI Photo Studio" />
+    <meta property="og:title" content="AI Photo Studio – Free Online Photo Editor & Passport Photo Maker" />
+    <meta
+      property="og:description"
+      content="Enhance photos, retouch portraits, straighten tilted heads, edit backgrounds, create formal portraits, and prepare custom-size passport photos and print-ready sheets online."
+    />
+    <meta property="og:image" content="https://pic.amitjoshi.info.np/favicon.svg" />
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:url" content="https://pic.amitjoshi.info.np/" />
+    <meta name="twitter:title" content="AI Photo Studio – Free Online Photo Editor & Passport Photo Maker" />
+    <meta
+      name="twitter:description"
+      content="Enhance photos, retouch portraits, straighten tilted heads, edit backgrounds, create formal portraits, and prepare custom-size passport photos and print-ready sheets online."
+    />
+    <meta name="twitter:image" content="https://pic.amitjoshi.info.np/favicon.svg" />
+
+    <!-- Preconnect Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+    <!-- Structured Data (JSON-LD) -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "AI Photo Studio",
+      "url": "https://pic.amitjoshi.info.np/",
+      "description": "Professional web-based photo editor with layers, portrait retouching, AI enhancement, background editor, passport photo sizing, and custom print layouts.",
+      "applicationCategory": "MultimediaApplication",
+      "operatingSystem": "All",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "creator": {
+        "@type": "Person",
+        "name": "Amit Joshi",
+        "email": "support@amitjoshi.info.np"
+      }
+    }
+    </script>
+
+    <!-- GitHub Pages Single Page App routing restoration script -->
+    <script>
+      (function() {
+        var redirect = sessionStorage.redirect;
+        delete sessionStorage.redirect;
+        if (redirect && redirect != location.href) {
+          history.replaceState(null, null, redirect);
+        }
+        // Handle query parameter p from 404.html
+        var params = new URLSearchParams(window.location.search);
+        var p = params.get('p');
+        if (p) {
+          var cleanPath = p.replace(/~and~/g, '&');
+          var q = params.get('q');
+          var finalUrl = cleanPath + (q ? '?' + q.replace(/~and~/g, '&') : '') + window.location.hash;
+          window.history.replaceState(null, null, finalUrl);
+        }
+      })();
+    </script>
+  </head>
+  <body class="bg-[#090d16] text-slate-100 antialiased selection:bg-cyan-500/30 selection:text-cyan-200 min-h-screen">
+    <div id="root"></div>
+    <!-- Dedicated print container outside normal application DOM to guarantee zero extra blank pages -->
+    <div id="print-sheet-root" class="hidden"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
