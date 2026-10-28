@@ -33,7 +33,7 @@ export const EnhancePage: React.FC<EnhancePageProps> = ({ navigate }) => {
   const [noiseReduction, setNoiseReduction] = useState<number>(40);
   const [lightingBoost, setLightingBoost] = useState<number>(50);
 
-  const [originalSrc, setOriginalSrc] = useState<string>('');
+  const [originalSrc, setOriginalSrc] = useState<string>(() => project?.layers[0]?.imageData?.src || SAMPLE_IMAGES[0]?.dataUrl || '');
   const [enhancedSrc, setEnhancedSrc] = useState<string>('');
   const [isProcessing, setIsProcessing] = useState<boolean>(false);
 

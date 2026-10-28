@@ -49,27 +49,31 @@ export const BeforeAfterSlider: React.FC<BeforeAfterSliderProps> = ({
       onTouchEnd={() => setIsDragging(false)}
     >
       {/* After image (full width base) */}
-      <img
-        src={afterSrc}
-        alt={afterLabel}
-        className="w-full h-full object-contain pointer-events-none block max-h-[45vh] sm:max-h-[60vh] lg:max-h-[580px] mx-auto"
-      />
+      {afterSrc ? (
+        <img
+          src={afterSrc}
+          alt={afterLabel}
+          className="w-full h-full object-contain pointer-events-none block max-h-[45vh] sm:max-h-[60vh] lg:max-h-[580px] mx-auto"
+        />
+      ) : null}
 
       {/* Before image (clipped overlay on the left) */}
-      <div
-        className="absolute inset-0 overflow-hidden pointer-events-none"
-        style={{ width: `${sliderPos}%` }}
-      >
-        <img
-          src={beforeSrc}
-          alt={beforeLabel}
-          className="absolute inset-0 w-full h-full object-contain max-h-[45vh] sm:max-h-[60vh] lg:max-h-[580px] mx-auto"
-          style={{
-            width: containerRef.current ? `${containerRef.current.clientWidth}px` : '100%',
-            maxWidth: 'none',
-          }}
-        />
-      </div>
+      {beforeSrc ? (
+        <div
+          className="absolute inset-0 overflow-hidden pointer-events-none"
+          style={{ width: `${sliderPos}%` }}
+        >
+          <img
+            src={beforeSrc}
+            alt={beforeLabel}
+            className="absolute inset-0 w-full h-full object-contain max-h-[45vh] sm:max-h-[60vh] lg:max-h-[580px] mx-auto"
+            style={{
+              width: containerRef.current ? `${containerRef.current.clientWidth}px` : '100%',
+              maxWidth: 'none',
+            }}
+          />
+        </div>
+      ) : null}
 
       {/* Draggable Divider Handle */}
       <div

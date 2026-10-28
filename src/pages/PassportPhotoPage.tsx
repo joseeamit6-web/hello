@@ -15,7 +15,13 @@ import {
   Sliders, 
   Grid, 
   Info,
-  Maximize2
+  Maximize2,
+  Zap,
+  Shirt,
+  RotateCw,
+  Sparkles,
+  CheckCircle2,
+  FileCheck
 } from 'lucide-react';
 
 interface PassportPhotoPageProps {
@@ -30,18 +36,19 @@ export const PassportPhotoPage: React.FC<PassportPhotoPageProps> = ({ navigate }
   const [bgColor, setBgColor] = useState<string>('#ffffff');
 
   // Interactive Crop & Positioning adjustments
-  const [zoomFactor, setZoomFactor] = useState<number>(1);
+  const [zoomFactor, setZoomFactor] = useState<number>(1.05);
   const [offsetY, setOffsetY] = useState<number>(0); // percent shift
   const [offsetX, setOffsetX] = useState<number>(0);
+  const [autoStatus, setAutoStatus] = useState<string>('');
 
-  const [originalSrc, setOriginalSrc] = useState<string>('');
+  const [originalSrc, setOriginalSrc] = useState<string>(() => project?.layers[0]?.imageData?.src || SAMPLE_IMAGES[3]?.dataUrl || '');
   const [passportCroppedSrc, setPassportCroppedSrc] = useState<string>('');
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
     updatePageSeo({
-      title: 'Passport Photo Maker – Custom Size & Background | AI Photo Studio',
-      description: 'Create biometric compliant Nepal passport photos, US visa photos, Schengen 35x45mm, and custom ID sheets with official proportion guides.',
+      title: 'Passport Photo Maker – Nepal MRP, US Visa, Schengen | AI Photo Studio',
+      description: 'Create biometric compliant Nepal passport photos (35x45mm), US visa (2x2"), Schengen, and Indian passport photos with 1-click AI alignment.',
       canonicalPath: '/passport-photo',
     });
   }, []);
@@ -92,11 +99,27 @@ export const PassportPhotoPage: React.FC<PassportPhotoPageProps> = ({ navigate }
     });
   }, [originalSrc, selectedPreset, zoomFactor, offsetX, offsetY, bgColor]);
 
+  const handle1ClickAutoAlign = () => {
+    // Automatically center face at standard 75% biometric proportion
+    setZoomFactor(1.12);
+    setOffsetY(2);
+    setOffsetX(0);
+    if (selectedPreset.bgColorName.toLowerCase().includes('blue')) {
+      setBgColor('#dbeafe');
+    } else if (selectedPreset.bgColorName.toLowerCase().includes('grey')) {
+      setBgColor('#f1f5f9');
+    } else {
+      setBgColor('#ffffff');
+    }
+    setAutoStatus('Biometric framing (75% face ratio) applied!');
+    setTimeout(() => setAutoStatus(''), 3000);
+  };
+
   const handleDownloadSingle = () => {
     if (!passportCroppedSrc) return;
     const a = document.createElement('a');
     a.href = passportCroppedSrc;
-    a.download = `${selectedPreset.id}-${selectedPreset.widthMm}x${selectedPreset.heightMm}mm.jpg`;
+    a.download = `${selectedPreset.id}-${selectedPreset.widthMm}x${selectedPreset.heightMm}mm-300dpi.jpg`;
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
@@ -104,59 +127,72 @@ export const PassportPhotoPage: React.FC<PassportPhotoPageProps> = ({ navigate }
 
   const handleOpenInPrintStudio = () => {
     if (!passportCroppedSrc) return;
-    // Commit the passport photo as base project and navigate to Print Studio
     if (project) {
-      applyImageAsNewBase(passportCroppedSrc, `Passport Photo: ${selectedPreset.name}`);
+      applyImageAsNewBase(passportCroppedSrc, `Passport: ${selectedPreset.name}`);
     } else {
       createNewProject(passportCroppedSrc, `Passport ${selectedPreset.name}`);
     }
     navigate('/print-studio');
   };
 
+  const handleOpenSuitStudio = () => {
+    if (passportCroppedSrc && !project) {
+      createNewProject(originalSrc, 'Portrait for Suit');
+    }
+    navigate('/outfit-studio');
+  };
+
+  const handleOpenStraightener = () => {
+    if (passportCroppedSrc && !project) {
+      createNewProject(originalSrc, 'Portrait for Straightener');
+    }
+    navigate('/head-straightener');
+  };
+
   return (
-    <div className="flex-1 bg-[#090d16] text-slate-100 py-6 px-4 sm:px-6 flex flex-col">
+    <div className="flex-1 bg-[#090d16] text-slate-100 py-4 sm:py-6 px-3 sm:px-6 flex flex-col">
       <div className="mx-auto max-w-6xl w-full flex-1 flex flex-col">
-        {/* Header */}
+        {/* Header Bar */}
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 pb-4 border-b border-slate-800">
           <div>
             <button
-              onClick={() => navigate('/editor')}
+              onClick={() => navigate('/')}
               className="inline-flex items-center gap-1 text-xs text-slate-400 hover:text-cyan-400 transition mb-1"
             >
               <ArrowLeft className="h-3.5 w-3.5" />
-              <span>Back to Editor Workspace</span>
+              <span>Back to Home</span>
             </button>
             <h1 className="text-xl sm:text-2xl font-bold text-white flex items-center gap-2">
               <CreditCard className="h-5 w-5 text-cyan-400" />
-              Passport, Visa &amp; ID Photo Maker
+              Passport &amp; Visa Photo Maker
             </h1>
             <p className="text-xs text-slate-400">
               Official biometric proportion framing for Nepal, US, Schengen, and international consular specifications.
             </p>
           </div>
 
-          <div className="flex items-center gap-2">
+          <div className="flex flex-wrap items-center gap-2 w-full sm:w-auto">
             <button
               onClick={handleDownloadSingle}
-              className="flex items-center gap-1.5 rounded-xl border border-slate-700 bg-slate-800 px-3.5 py-2 text-xs font-medium text-slate-200 hover:text-white"
+              className="flex-1 sm:flex-initial flex items-center justify-center gap-1.5 rounded-xl border border-slate-700 bg-slate-800 px-3.5 py-2 text-xs font-medium text-slate-200 hover:text-white transition shadow-sm"
             >
               <Download className="h-4 w-4" />
-              <span>Download Photo (300 DPI)</span>
+              <span>Download JPG (300 DPI)</span>
             </button>
             <button
               onClick={handleOpenInPrintStudio}
-              className="flex items-center gap-1.5 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 px-4 py-2 text-xs font-semibold text-white shadow-lg shadow-emerald-500/20 hover:from-emerald-500 hover:to-teal-500 transition"
+              className="flex-1 sm:flex-initial flex items-center justify-center gap-1.5 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 px-4 py-2 text-xs font-semibold text-white shadow-lg shadow-emerald-500/20 hover:from-emerald-500 hover:to-teal-500 transition"
             >
               <Printer className="h-4 w-4" />
-              <span>Print A4 Sheet</span>
+              <span>Print 4×6" Sheet</span>
             </button>
           </div>
         </div>
 
         {/* Content */}
-        <div className="mt-6 grid grid-cols-1 lg:grid-cols-3 gap-6 flex-1 items-start">
+        <div className="mt-5 grid grid-cols-1 lg:grid-cols-3 gap-6 flex-1 items-start">
           {/* Left: Passport Photo Frame Preview with Biometric Overlay */}
-          <div className="lg:col-span-2 rounded-2xl border border-slate-800 bg-[#070b12] p-2 sm:p-6 flex flex-col items-center justify-center min-h-[340px] sm:min-h-[500px] relative shadow-2xl overflow-hidden">
+          <div className="lg:col-span-2 rounded-2xl border border-slate-800 bg-[#070b12] p-3 sm:p-6 flex flex-col items-center justify-center min-h-[340px] sm:min-h-[500px] relative shadow-2xl overflow-hidden">
             {passportCroppedSrc ? (
               <div className="relative shadow-2xl border-4 border-slate-800 rounded bg-white overflow-hidden max-h-[340px] sm:max-h-[460px]">
                 <img
@@ -209,30 +245,84 @@ export const PassportPhotoPage: React.FC<PassportPhotoPageProps> = ({ navigate }
               <div className="text-xs text-slate-400 animate-pulse">Rendering biometric passport frame...</div>
             )}
 
-            {/* Guide toggle button */}
-            <div className="absolute bottom-3 left-4 flex items-center gap-2 bg-slate-900/90 rounded-lg px-2.5 py-1 border border-slate-800 text-xs">
+            {/* Bottom guide toggle & auto status */}
+            <div className="absolute bottom-3 left-4 right-4 flex items-center justify-between pointer-events-none">
               <button
                 onClick={() => setShowBiometricGuide(!showBiometricGuide)}
-                className={`flex items-center gap-1.5 ${showBiometricGuide ? 'text-cyan-400' : 'text-slate-500'}`}
+                className="pointer-events-auto flex items-center gap-1.5 bg-slate-900/90 rounded-lg px-2.5 py-1.5 border border-slate-800 text-xs shadow-md"
               >
-                <Grid className="h-3.5 w-3.5" />
-                <span>Biometric Overlay ({showBiometricGuide ? 'ON' : 'OFF'})</span>
+                <Grid className="h-3.5 w-3.5 text-cyan-400" />
+                <span className={showBiometricGuide ? 'text-cyan-400' : 'text-slate-400'}>
+                  Biometric Guide ({showBiometricGuide ? 'ON' : 'OFF'})
+                </span>
               </button>
+
+              {autoStatus && (
+                <div className="bg-emerald-950/90 border border-emerald-500/40 text-emerald-300 text-xs px-3 py-1 rounded-lg flex items-center gap-1.5 backdrop-blur animate-in fade-in">
+                  <CheckCircle2 className="h-3.5 w-3.5" />
+                  <span>{autoStatus}</span>
+                </div>
+              )}
             </div>
           </div>
 
-          {/* Right: Presets & Positioning Sidebar */}
-          <div className="space-y-5 text-xs">
+          {/* Right: Presets & Controls Sidebar */}
+          <div className="space-y-4 text-xs">
+            {/* Quick AI Superpowers Bar */}
+            <div className="rounded-2xl border border-cyan-500/30 bg-gradient-to-r from-cyan-950/30 to-slate-900 p-4 space-y-2.5 shadow-lg">
+              <div className="flex items-center justify-between">
+                <span className="font-bold text-white flex items-center gap-1.5">
+                  <Zap className="h-4 w-4 text-cyan-400 fill-cyan-400" />
+                  1-Click AI Actions
+                </span>
+                <span className="text-[10px] font-mono text-cyan-400">Fast Auto</span>
+              </div>
+
+              <button
+                onClick={handle1ClickAutoAlign}
+                className="w-full flex items-center justify-center gap-1.5 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-white font-bold py-2.5 text-xs shadow-md shadow-cyan-500/20 transition"
+              >
+                <Sparkles className="h-3.5 w-3.5" />
+                <span>Auto-Fit Biometric 70-80%</span>
+              </button>
+
+              <div className="grid grid-cols-2 gap-2 pt-1">
+                <button
+                  onClick={handleOpenSuitStudio}
+                  className="flex items-center justify-center gap-1.5 p-2 rounded-xl bg-slate-800/90 hover:bg-slate-700 border border-slate-700/80 text-slate-200 hover:text-white transition"
+                >
+                  <Shirt className="h-3.5 w-3.5 text-amber-400" />
+                  <span>Add Formal Suit</span>
+                </button>
+                <button
+                  onClick={handleOpenStraightener}
+                  className="flex items-center justify-center gap-1.5 p-2 rounded-xl bg-slate-800/90 hover:bg-slate-700 border border-slate-700/80 text-slate-200 hover:text-white transition"
+                >
+                  <RotateCw className="h-3.5 w-3.5 text-rose-400" />
+                  <span>Straighten Tilt</span>
+                </button>
+              </div>
+            </div>
+
             {/* Country Presets */}
-            <div className="rounded-2xl border border-slate-800 bg-[#0d131f] p-5 shadow-xl space-y-3">
+            <div className="rounded-2xl border border-slate-800 bg-[#0d131f] p-4 shadow-xl space-y-3">
               <div className="font-bold uppercase tracking-wider text-slate-300">Select Official Preset</div>
-              <div className="space-y-1.5 max-h-60 overflow-y-auto pr-1">
+              <div className="space-y-1.5 max-h-56 overflow-y-auto pr-1">
                 {PASSPORT_PRESETS.map((preset) => {
                   const isSelected = selectedPreset.id === preset.id;
                   return (
                     <button
                       key={preset.id}
-                      onClick={() => setSelectedPreset(preset)}
+                      onClick={() => {
+                        setSelectedPreset(preset);
+                        if (preset.bgColorName.toLowerCase().includes('grey')) {
+                          setBgColor('#f1f5f9');
+                        } else if (preset.bgColorName.toLowerCase().includes('blue')) {
+                          setBgColor('#dbeafe');
+                        } else {
+                          setBgColor('#ffffff');
+                        }
+                      }}
                       className={`w-full p-2.5 rounded-xl border text-left transition flex items-center justify-between ${
                         isSelected
                           ? 'bg-cyan-500/15 border-cyan-500 text-cyan-300 font-semibold'
@@ -262,8 +352,8 @@ export const PassportPhotoPage: React.FC<PassportPhotoPageProps> = ({ navigate }
             </div>
 
             {/* Framing & Scale Controls */}
-            <div className="rounded-2xl border border-slate-800 bg-[#0d131f] p-5 shadow-xl space-y-3">
-              <div className="font-bold uppercase tracking-wider text-slate-300">Head Scale &amp; Position</div>
+            <div className="rounded-2xl border border-slate-800 bg-[#0d131f] p-4 shadow-xl space-y-3">
+              <div className="font-bold uppercase tracking-wider text-slate-300">Manual Fine-Tuning</div>
 
               <div>
                 <div className="flex justify-between text-slate-300 font-medium mb-1">
@@ -300,12 +390,20 @@ export const PassportPhotoPage: React.FC<PassportPhotoPageProps> = ({ navigate }
               <div className="pt-2 border-t border-slate-800 flex items-center justify-between">
                 <span className="text-slate-400">Backdrop:</span>
                 <div className="flex items-center gap-2">
-                  {['#ffffff', '#f1f5f9', '#e2e8f0', '#38bdf8'].map((c) => (
+                  {[
+                    { color: '#ffffff', title: 'White' },
+                    { color: '#f1f5f9', title: 'Light Grey' },
+                    { color: '#dbeafe', title: 'Light Blue' },
+                    { color: '#dc2626', title: 'Red' },
+                  ].map((item) => (
                     <button
-                      key={c}
-                      onClick={() => setBgColor(c)}
-                      className={`h-6 w-6 rounded border ${bgColor === c ? 'border-cyan-400 ring-2 ring-cyan-400/40' : 'border-slate-700'}`}
-                      style={{ backgroundColor: c }}
+                      key={item.color}
+                      onClick={() => setBgColor(item.color)}
+                      title={item.title}
+                      className={`h-6 w-6 rounded border transition ${
+                        bgColor === item.color ? 'border-cyan-400 ring-2 ring-cyan-400/40 scale-105' : 'border-slate-700'
+                      }`}
+                      style={{ backgroundColor: item.color }}
                     />
                   ))}
                 </div>

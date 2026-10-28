@@ -24,26 +24,71 @@ import { PrivacyPage } from './pages/PrivacyPage';
 import { TermsPage } from './pages/TermsPage';
 import { NotFoundPage } from './pages/NotFoundPage';
 
+const KNOWN_ROUTES = [
+  '/editor',
+  '/enhance',
+  '/retouch',
+  '/head-straightener',
+  '/outfit-studio',
+  '/background',
+  '/passport-photo',
+  '/print-studio',
+  '/projects',
+  '/help',
+  '/privacy',
+  '/terms',
+];
+
+function getNormalizedRoute(): string {
+  // 1. Check hash first: e.g. "#/passport-photo"
+  if (window.location.hash) {
+    const rawHash = window.location.hash.replace(/^#/, '');
+    const cleanHash = rawHash.startsWith('/') ? rawHash : '/' + rawHash;
+    const matched = KNOWN_ROUTES.find((r) => cleanHash === r || cleanHash.startsWith(r + '/'));
+    if (matched) return matched;
+    if (cleanHash === '/' || cleanHash === '') return '/';
+  }
+
+  // 2. Check query param ?p= (from GitHub Pages 404.html redirect)
+  const params = new URLSearchParams(window.location.search);
+  const p = params.get('p');
+  if (p) {
+    const matched = KNOWN_ROUTES.find((r) => p.endsWith(r) || p.startsWith(r));
+    if (matched) return matched;
+  }
+
+  // 3. Check window.location.pathname (strip any repo prefix)
+  const path = window.location.pathname || '/';
+  for (const r of KNOWN_ROUTES) {
+    if (path.endsWith(r)) return r;
+  }
+
+  return '/';
+}
+
 export default function App() {
   const [currentPath, setCurrentPath] = useState<string>(() => {
-    return window.location.pathname || '/';
+    return getNormalizedRoute();
   });
 
   useEffect(() => {
-    const handlePopState = () => {
-      setCurrentPath(window.location.pathname || '/');
+    const handleLocationChange = () => {
+      setCurrentPath(getNormalizedRoute());
     };
 
-    window.addEventListener('popstate', handlePopState);
-    return () => window.removeEventListener('popstate', handlePopState);
+    window.addEventListener('popstate', handleLocationChange);
+    window.addEventListener('hashchange', handleLocationChange);
+    return () => {
+      window.removeEventListener('popstate', handleLocationChange);
+      window.removeEventListener('hashchange', handleLocationChange);
+    };
   }, []);
 
   const navigate = (path: string) => {
-    if (window.location.pathname !== path) {
-      window.history.pushState(null, '', path);
-      setCurrentPath(path);
-      window.scrollTo(0, 0);
-    }
+    // Sync hash for GitHub Pages compatibility and trigger update
+    window.location.hash = path;
+    setCurrentPath(path);
+    window.scrollTo(0, 0);
   };
 
   const renderCurrentPage = () => {

@@ -166,11 +166,18 @@ export const ProjectsPage: React.FC<ProjectsPageProps> = ({ navigate }) => {
                 >
                   {/* Thumbnail */}
                   <div className="h-44 w-full bg-slate-950 flex items-center justify-center overflow-hidden border-b border-slate-800 relative bg-transparency-grid">
-                    <img
-                      src={proj.thumbnail}
-                      alt={proj.name}
-                      className="h-full w-full object-contain group-hover:scale-105 transition duration-300"
-                    />
+                    {proj.thumbnail ? (
+                      <img
+                        src={proj.thumbnail}
+                        alt={proj.name}
+                        className="h-full w-full object-contain group-hover:scale-105 transition duration-300"
+                      />
+                    ) : (
+                      <div className="flex flex-col items-center justify-center text-slate-600 gap-1">
+                        <FolderOpen className="h-8 w-8" />
+                        <span className="text-[10px]">No Preview</span>
+                      </div>
+                    )}
                     <div className="absolute bottom-2 left-2 rounded bg-slate-900/90 backdrop-blur px-2 py-0.5 text-[10px] font-mono text-cyan-400 border border-slate-800">
                       {proj.width} × {proj.height} px
                     </div>

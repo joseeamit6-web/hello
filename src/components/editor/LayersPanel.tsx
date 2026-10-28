@@ -188,9 +188,9 @@ export const LayersPanel: React.FC = () => {
                 {/* Left: Thumbnail & Name */}
                 <div className="flex items-center gap-2.5 truncate">
                   <div className="h-7 w-7 rounded bg-slate-950 flex-shrink-0 flex items-center justify-center border border-slate-800 overflow-hidden">
-                    {layer.type === 'image' && layer.imageData && (
+                    {layer.type === 'image' && layer.imageData?.src ? (
                       <img src={layer.imageData.src} alt="" className="w-full h-full object-cover" />
-                    )}
+                    ) : null}
                     {layer.type === 'text' && <Type className="h-3.5 w-3.5 text-cyan-400" />}
                     {layer.type === 'shape' && <Square className="h-3.5 w-3.5 text-violet-400" />}
                   </div>

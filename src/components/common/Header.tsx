@@ -93,14 +93,13 @@ export const Header: React.FC<HeaderProps> = ({ currentRoute = '/', navigate }) 
   };
 
   const navLinks = [
-    { name: 'Editor', path: '/editor', icon: Layers },
-    { name: 'Enhance', path: '/enhance', icon: Sparkles },
-    { name: 'Retouch', path: '/retouch', icon: UserCheck },
+    { name: 'Passport Maker', path: '/passport-photo', icon: CreditCard, primary: true },
+    { name: 'Print Studio', path: '/print-studio', icon: Printer },
+    { name: 'Formal Suits', path: '/outfit-studio', icon: Shirt },
     { name: 'Straighten', path: '/head-straightener', icon: RotateCw },
-    { name: 'Outfit', path: '/outfit-studio', icon: Shirt },
     { name: 'Background', path: '/background', icon: Scissors },
-    { name: 'Passport', path: '/passport-photo', icon: CreditCard },
-    { name: 'Print', path: '/print-studio', icon: Printer },
+    { name: 'Pro Editor', path: '/editor', icon: Layers },
+    { name: 'Enhance', path: '/enhance', icon: Sparkles },
     { name: 'Projects', path: '/projects', icon: FolderArchive },
     { name: 'Help', path: '/help', icon: HelpCircle },
   ];
@@ -113,16 +112,16 @@ export const Header: React.FC<HeaderProps> = ({ currentRoute = '/', navigate }) 
           <button
             onClick={() => handleNav('/')}
             className="flex items-center gap-2 sm:gap-2.5 text-left transition hover:opacity-90 flex-shrink-0"
-            aria-label="AI Photo Studio Homepage"
+            aria-label="AI Passport Photo Studio Homepage"
           >
             <div className="flex h-8 w-8 sm:h-9 sm:w-9 items-center justify-center rounded-xl bg-gradient-to-tr from-cyan-500 via-blue-600 to-violet-600 p-0.5 shadow-md shadow-cyan-500/10">
               <div className="flex h-full w-full items-center justify-center rounded-[10px] bg-slate-950">
-                <Camera className="h-4 w-4 text-cyan-400" />
+                <CreditCard className="h-4 w-4 text-cyan-400" />
               </div>
             </div>
             <div>
-              <span className="bg-gradient-to-r from-white via-slate-200 to-slate-400 bg-clip-text text-sm font-bold tracking-tight text-transparent sm:text-base">
-                AI Photo Studio
+              <span className="bg-gradient-to-r from-white via-slate-200 to-slate-400 bg-clip-text text-sm font-bold tracking-tight text-transparent sm:text-base flex items-center gap-1.5">
+                AI Passport Studio
               </span>
               <span className="hidden md:block text-[10px] font-mono tracking-wider text-cyan-400">
                 pic.amitjoshi.info.np
@@ -142,12 +141,13 @@ export const Header: React.FC<HeaderProps> = ({ currentRoute = '/', navigate }) 
                   className={`flex items-center gap-1.5 rounded-lg px-2 xl:px-2.5 py-1.5 text-xs font-medium transition ${
                     isActive
                       ? 'bg-slate-800 text-cyan-400 border border-slate-700/80 shadow-sm'
+                      : item.primary
+                      ? 'text-cyan-300 hover:bg-cyan-500/10 font-semibold'
                       : 'text-slate-400 hover:bg-slate-800/60 hover:text-slate-200'
                   }`}
                 >
-                  <Icon className={`h-3.5 w-3.5 ${isActive ? 'text-cyan-400' : 'text-slate-400'}`} />
-                  <span className="hidden xl:inline">{item.name}</span>
-                  <span className="xl:hidden">{item.name}</span>
+                  <Icon className={`h-3.5 w-3.5 ${isActive ? 'text-cyan-400' : item.primary ? 'text-cyan-400' : 'text-slate-400'}`} />
+                  <span>{item.name}</span>
                 </button>
               );
             })}
